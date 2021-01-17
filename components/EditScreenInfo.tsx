@@ -5,9 +5,12 @@ import { StyleSheet, TouchableOpacity, TextInput, Button, Alert } from 'react-na
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
+import { TotalAmountContainer } from '../containers/TotalAmountContainer';
 
 const EditScreenInfo = ({ path }: { path: string }) => {
-  const [value, onChangeValue] = useState<string>('0')
+  const [value, onChangeValue] = useState<string>('0');
+  const totalAmount = TotalAmountContainer.useContainer();
+
   return (
     <View>      
         <Text
@@ -31,7 +34,7 @@ const EditScreenInfo = ({ path }: { path: string }) => {
        <Button
         title="Calculate"
         color="#f194ff"
-        onPress={() => Alert.alert('Button with adjusted color pressed')}
+        onPress={() => totalAmount.handleTotalAmount(+value)}
       />
     </View>
   );
