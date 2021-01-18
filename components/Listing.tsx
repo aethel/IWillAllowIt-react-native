@@ -1,30 +1,32 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, TouchableOpacity, TextInput, Button, Alert, ImageComponent, SafeAreaView } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { TotalAmountContainer } from '../containers/TotalAmountContainer';
+import { ScrollView, FlatList } from 'react-native-gesture-handler';
+import ListingItem from './ListingItem'
 
 const Listing = ({navigation}:{navigation:any}) => {
   const {totalAmount} = TotalAmountContainer.useContainer();
 
   return (
-    <View>      
+    <SafeAreaView style={styles.container}>      
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)">
             {totalAmount}
         </Text>
-        
+          <FlatList style={styles.scrollElem} data={[1,2,3]} keyExtractor={(index) => `${index}`} renderItem={({item}) => <ListingItem data={item}/>}/>
        <Button
         title="Back"
         color="#f194ff"
         onPress={() => navigation.goBack(null)}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -73,6 +75,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     textAlign: 'center',
+  },
+  scrollElem: {
+    backgroundColor: 'pink',
+    height: 50,
+    flex:1 
   },
   helpContainer: {
     marginTop: 15,
