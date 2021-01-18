@@ -5,18 +5,26 @@ export default {
   config: {
     screens: {
       Root: {
+          screens: {
+            IndexScreen: 'index'
+          }
+        // screens: {
+        //   TabOne: {
+        //     screens: {
+        //       TabOneScreen: 'one',
+        //     },
+        //   },
+        //   TabTwo: {
+        //     screens: {
+        //       TabTwoScreen: 'two',
+        //     },
+        //   },
+        // },
+      },
+      Listing: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: 'one',
-            },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
-        },
+          ListingScreen: 'listing'
+        }
       },
       NotFound: '*',
     },

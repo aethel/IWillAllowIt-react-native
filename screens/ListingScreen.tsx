@@ -3,13 +3,14 @@ import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import Listing from '../components/Listing';
 
-export default function TabOneScreen() {
+export default function ListingScreen({navigation}:{navigation:any}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Start tracking your expenses</Text>
+      <Text style={styles.title}>Here's your monthly breakdown</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <Listing navigation={navigation}/>
     </View>
   );
 }

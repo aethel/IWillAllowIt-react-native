@@ -7,9 +7,8 @@ import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { TotalAmountContainer } from '../containers/TotalAmountContainer';
 
-const EditScreenInfo = ({navigation}:{navigation:any}) => {
-  const [value, onChangeValue] = useState<string>('0');
-  const totalAmount = TotalAmountContainer.useContainer();
+const Listing = ({navigation}:{navigation:any}) => {
+  const {totalAmount} = TotalAmountContainer.useContainer();
 
   return (
     <View>      
@@ -17,30 +16,17 @@ const EditScreenInfo = ({navigation}:{navigation:any}) => {
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)">
-          Enter your amount
+            {totalAmount}
         </Text>
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          {value}
-        </Text>
-        <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: 200 }}
-        keyboardType={'numeric'}
-        onChangeText={amount => onChangeValue(amount)}
-        onBlur={() => totalAmount.handleTotalAmount(+value)}
-        value={value}
-       />
+        
        <Button
-        title="Calculate"
+        title="Back"
         color="#f194ff"
-        onPress={ () => navigation.navigate('Listing')}
+        onPress={() => navigation.goBack(null)}
       />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -101,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditScreenInfo;
+export default Listing;
