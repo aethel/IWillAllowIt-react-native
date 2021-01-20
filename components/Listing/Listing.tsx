@@ -8,19 +8,20 @@ import {
   Alert,
   ImageComponent,
   SafeAreaView,
+  Modal,
 } from "react-native";
 
-import Colors from "../constants/Colors";
-import { MonoText } from "./StyledText";
-import { Text, View } from "./Themed";
-import { TotalAmountContainer } from "../containers/TotalAmountContainer";
-import { ScrollView, FlatList } from "react-native-gesture-handler";
+import Colors from "../../constants/Colors";
+import { MonoText } from "../StyledText";
+import { Text, View } from "../Themed";
+import { TotalAmountContainer } from "../../containers/TotalAmountContainer";
+import { ScrollView, FlatList, TouchableHighlight } from "react-native-gesture-handler";
 import ListingItem from "./ListingItem";
-import useDays from "../hooks/useDays";
+import useDays from "../../hooks/useDays";
 
 export type DayAllowance = {
   id: number;
-  allowance: number|string;
+  allowance: number | string;
   deductions: any[];
   additions: any[];
 };
@@ -28,6 +29,8 @@ export type DayAllowance = {
 const Listing = ({ navigation }: { navigation: any }) => {
   const { totalAmount } = TotalAmountContainer.useContainer();
   const [dayOfMonth, dayOfMonthPlusOne, NumberOfDaysInMonth] = useDays();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
     (val: any, index: number): DayAllowance => {
       return {
@@ -38,9 +41,49 @@ const Listing = ({ navigation }: { navigation: any }) => {
       };
     }
   );
-  console.debug(allowanceDays);
+
+  // const Item = ({ item, onPress }:{item:any, onPress:()=> void}) => (
+  //   <TouchableOpacity onPress={onPress}>
+  //     <ListingItem data={item} />
+  //   </TouchableOpacity>
+  // );
+
+  const renderItem = ({ item }:{item:any}) => {
+    return (
+      <ListingItem
+        item={item}
+        onPress={async () => {
+          await setSelectedId(item.id)
+          setModalVisible(!modalVisible)
+        }}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
+        <View 
+        style={styles.modalView}
+        >
+          {selectedId && <Text>is a modal  {allowanceDays[selectedId!].allowance}</Text>}
+          <Text>is a modal {selectedId}</Text>
+          <Text>is a modal {selectedId}</Text>
+              <Button title='Hide Modal' onPress={() => {
+                setModalVisible(!modalVisible);
+              }}/>
+        </View>
+      </Modal>
+      
+      
+      
       <Text
         style={styles.getStartedText}
         lightColor="rgba(0,0,0,0.8)"
@@ -53,13 +96,20 @@ const Listing = ({ navigation }: { navigation: any }) => {
         style={styles.scrollElem}
         data={allowanceDays}
         keyExtractor={(item) => `${item.id}`}
-        renderItem={({ item }: { item: any }) => <ListingItem data={item} />}
+        renderItem={renderItem}
+        extraData={selectedId}
       />
       <Button
         title="Back"
         color="#f194ff"
         onPress={() => navigation.goBack(null)}
       />
+      <Button
+        title="modal"
+        color="#f194ff"
+        onPress={() => setModalVisible(!modalVisible)}
+      />
+
     </SafeAreaView>
   );
 };
@@ -74,6 +124,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 19,
     textAlign: "center",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
   contentContainer: {
     paddingTop: 30,

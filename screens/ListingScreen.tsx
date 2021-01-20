@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-import Listing from '../components/Listing';
+import Listing from '../components/Listing/Listing';
 
 export default function ListingScreen({navigation}:{navigation:any}) {
   return (
