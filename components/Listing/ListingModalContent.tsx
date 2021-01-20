@@ -12,7 +12,7 @@ const ListingModalContent = ({
   return (
     <View style={styles.modalView}>
       <Text>Your allowance for {allowanceObj.id}</Text>
-      <Text>{allowanceObj.allowance}</Text>
+      <Text>{parseFloat(allowanceObj.allowance as string).toFixed(2)}</Text>
       <Button title="Hide Modal" onPress={closeModalHandler} />
     </View>
   );

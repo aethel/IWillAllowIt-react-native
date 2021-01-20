@@ -46,7 +46,7 @@ const Listing = ({ navigation }: { navigation: any }) => {
       };
     }
   );
-
+console.debug(allowanceDays)
   // const Item = ({ item, onPress }:{item:any, onPress:()=> void}) => (
   //   <TouchableOpacity onPress={onPress}>
   //     <ListingItem data={item} />
