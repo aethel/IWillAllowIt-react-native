@@ -1,71 +1,105 @@
-import * as WebBrowser from 'expo-web-browser';
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, TextInput, Button, Alert, ImageComponent, SafeAreaView } from 'react-native';
+import * as WebBrowser from "expo-web-browser";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Button,
+  Alert,
+  ImageComponent,
+  SafeAreaView,
+} from "react-native";
 
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-import { TotalAmountContainer } from '../containers/TotalAmountContainer';
-import { ScrollView, FlatList } from 'react-native-gesture-handler';
-import ListingItem from './ListingItem'
+import Colors from "../constants/Colors";
+import { MonoText } from "./StyledText";
+import { Text, View } from "./Themed";
+import { TotalAmountContainer } from "../containers/TotalAmountContainer";
+import { ScrollView, FlatList } from "react-native-gesture-handler";
+import ListingItem from "./ListingItem";
+import useDays from "../hooks/useDays";
 
-const Listing = ({navigation}:{navigation:any}) => {
-  const {totalAmount} = TotalAmountContainer.useContainer();
+export type DayAllowance = {
+  id: number;
+  allowance: number|string;
+  deductions: any[];
+  additions: any[];
+};
 
+const Listing = ({ navigation }: { navigation: any }) => {
+  const { totalAmount } = TotalAmountContainer.useContainer();
+  const [dayOfMonth, dayOfMonthPlusOne, NumberOfDaysInMonth] = useDays();
+  const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
+    (val: any, index: number): DayAllowance => {
+      return {
+        id: index + 1,
+        allowance: totalAmount / NumberOfDaysInMonth(),
+        deductions: [],
+        additions: [],
+      };
+    }
+  );
+  console.debug(allowanceDays);
   return (
-    <SafeAreaView style={styles.container}>      
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-            {totalAmount}
-        </Text>
-          <FlatList style={styles.scrollElem} data={[1,2,3]} keyExtractor={(index) => `${index}`} renderItem={({item}) => <ListingItem data={item}/>}/>
-       <Button
+    <SafeAreaView style={styles.container}>
+      <Text
+        style={styles.getStartedText}
+        lightColor="rgba(0,0,0,0.8)"
+        darkColor="rgba(255,255,255,0.8)"
+      >
+        {totalAmount} {dayOfMonth} wut{dayOfMonthPlusOne} ddd{" "}
+        {NumberOfDaysInMonth()}
+      </Text>
+      <FlatList
+        style={styles.scrollElem}
+        data={allowanceDays}
+        keyExtractor={(item) => `${item.id}`}
+        renderItem={({ item }: { item: any }) => <ListingItem data={item} />}
+      />
+      <Button
         title="Back"
         color="#f194ff"
         onPress={() => navigation.goBack(null)}
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   developmentModeText: {
     marginBottom: 20,
     fontSize: 14,
     lineHeight: 19,
-    textAlign: 'center',
+    textAlign: "center",
   },
   contentContainer: {
     paddingTop: 30,
   },
   welcomeContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
     marginBottom: 20,
   },
   welcomeImage: {
     width: 100,
     height: 80,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginTop: 3,
     marginLeft: -10,
   },
   getStartedContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 50,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   homeScreenFilename: {
     marginVertical: 7,
   },
   codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
+    color: "rgba(96,100,109, 0.8)",
   },
   codeHighlightContainer: {
     borderRadius: 3,
@@ -74,23 +108,23 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   scrollElem: {
-    backgroundColor: 'pink',
+    backgroundColor: "pink",
     height: 50,
-    flex:1 
+    flex: 1,
   },
   helpContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   helpLink: {
     paddingVertical: 15,
   },
   helpLinkText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
