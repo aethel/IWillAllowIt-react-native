@@ -15,9 +15,14 @@ import Colors from "../../constants/Colors";
 import { MonoText } from "../StyledText";
 import { Text, View } from "../Themed";
 import { TotalAmountContainer } from "../../containers/TotalAmountContainer";
-import { ScrollView, FlatList, TouchableHighlight } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  FlatList,
+  TouchableHighlight,
+} from "react-native-gesture-handler";
 import ListingItem from "./ListingItem";
 import useDays from "../../hooks/useDays";
+import ListingModalContent from "./ListingModalContent";
 
 export type DayAllowance = {
   id: number;
@@ -48,13 +53,13 @@ const Listing = ({ navigation }: { navigation: any }) => {
   //   </TouchableOpacity>
   // );
 
-  const renderItem = ({ item }:{item:any}) => {
+  const renderItem = ({ item }: { item: any }) => {
     return (
       <ListingItem
         item={item}
         onPress={async () => {
-          await setSelectedId(item.id)
-          setModalVisible(!modalVisible)
+          await setSelectedId(item.id);
+          setModalVisible(!modalVisible);
         }}
       />
     );
@@ -70,20 +75,15 @@ const Listing = ({ navigation }: { navigation: any }) => {
           Alert.alert("Modal has been closed.");
         }}
       >
-        <View 
-        style={styles.modalView}
-        >
-          {selectedId && <Text>is a modal  {allowanceDays[selectedId!].allowance}</Text>}
-          <Text>is a modal {selectedId}</Text>
-          <Text>is a modal {selectedId}</Text>
-              <Button title='Hide Modal' onPress={() => {
-                setModalVisible(!modalVisible);
-              }}/>
-        </View>
+        {selectedId && (
+          <ListingModalContent
+            allowanceObj={allowanceDays[selectedId!]}
+            closeModalHandler={() => setModalVisible(!modalVisible)}
+          />
+        )}
+        {/* {selectedId && <Text>is a modal  {allowanceDays[selectedId!].allowance}</Text>} */}
       </Modal>
-      
-      
-      
+
       <Text
         style={styles.getStartedText}
         lightColor="rgba(0,0,0,0.8)"
@@ -104,12 +104,6 @@ const Listing = ({ navigation }: { navigation: any }) => {
         color="#f194ff"
         onPress={() => navigation.goBack(null)}
       />
-      <Button
-        title="modal"
-        color="#f194ff"
-        onPress={() => setModalVisible(!modalVisible)}
-      />
-
     </SafeAreaView>
   );
 };
@@ -134,11 +128,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   contentContainer: {
     paddingTop: 30,
