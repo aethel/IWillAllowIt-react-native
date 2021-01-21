@@ -3,28 +3,9 @@
 // sum allowances from beginning of month until today 
 // divide by days from today until end of month
 
-// export const updateAllowancesFromTodays = (arr,dayInMonth, manual = false) => {
-//     const dayInMonthPlusOne = new Date(new Date.getTime() + 86400000).getDate()
-//     const daysFromToday = manual ? arr.splice(dayInMonthPlusOne) : arr.splice(dayInMonth);
-//     const daysUntilToday = arr.splice(0, dayInMonth);
-//     const sumOfPreviousAllowances = daysUntilToday
-//       .map((item) => {
-//         return item.allowance || 0;
-//       })
-//       .reduce((acc, curr) => acc + curr);
-//     const sumOfFutureAllowances = daysFromToday
-//       .map((item) => {
-//         return item.allowance || 0;
-//       })
-//       .reduce((acc, curr) => acc + curr);
-//     const updatedAllowancesFromToday = daysFromToday.map((item) => {
-//       const allowance =
-//         (sumOfPreviousAllowances + sumOfFutureAllowances) /
-//         daysFromToday.length;
-//       return { ...item, allowance };
-//     });
-//     const newBreakdown = [...daysUntilToday, ...updatedAllowancesFromToday];
-//     return newBreakdown;
+import { DayAllowance } from "../components/Listing/Listing";
+import { useState, useMemo } from "react";
+
 const dayOfMonth = new Date().getDate();
 const test = [
     {
@@ -214,32 +195,63 @@ const test = [
         "id": 31,
     },
 ]
-
-const remainingAllowances = (data: any[]) => {
-    // const dayInMonthPlusOne = new Date(new Date.getTime() + 86400000).getDate();
-    // -1 to get dates before and excluding today
-    // -1 to get dates before and excluding today
-    const daysAfterToday = data.splice(dayOfMonth - 1);
-    const daysBeforeToday = data.splice(0, dayOfMonth - 1);
-    const sumOfPreviousAllowances = daysBeforeToday
-        .map((item) => {
-            return item.allowance || 0;
-        })
-        .reduce((acc, curr) => acc + curr);
-    const sumOfFutureAllowances = daysAfterToday
-        .map((item) => {
-            return item.allowance || 0;
-        })
-        .reduce((acc, curr) => acc + curr);
-    const updatedAllowancesFromToday = daysAfterToday.map((item) => {
-        const allowance =
-            (sumOfPreviousAllowances + sumOfFutureAllowances) /
-            daysAfterToday.length;
-        return { ...item, allowance };
-    });
-    const newBreakdown = [...daysBeforeToday, ...updatedAllowancesFromToday];
-    console.log('sumOfPreviousAllowances', sumOfPreviousAllowances);
-    console.log('sumOfFutureAllowances', sumOfFutureAllowances)
-    console.log('breakdown', newBreakdown)
-    return newBreakdown;
+export type useAllowancesType = {
+    DeductFromAllowance: (arg1:number, arg2:number) => void;
 }
+
+const useAllowances = (initialState:DayAllowance[]) => {
+
+    const [dailyAllowances, setDailyAllowances] = useState<DayAllowance[]>(initialState);
+
+    const DeductFromAllowance = (itemIndex:number, deduction:number) => {
+        const oldAllowanceObj = dailyAllowances[itemIndex];
+        const allowance = oldAllowanceObj.allowance as number - deduction; 
+        const deductions = [...oldAllowanceObj.deductions, deduction]
+        const newAllowanceObj = oldAllowanceObj && {...oldAllowanceObj, allowance, deductions}
+        const newAllowances = dailyAllowances.map((item:any,index:number) => {
+            if(itemIndex === index) {
+                return newAllowanceObj;
+            }
+            return item;
+        })
+        console.debug(newAllowances);
+        setDailyAllowances(newAllowances)
+    }
+    
+    const SaveAllowances = (data:DayAllowance[]) => {
+        setDailyAllowances(data);
+    }
+
+    const RecalculateAllowances = (data: DayAllowance[]): void => {
+        // const dayInMonthPlusOne = new Date(new Date.getTime() + 86400000).getDate();
+        // -1 to get dates before and excluding today
+        // -1 to get dates before and excluding today
+        const daysAfterToday = data.splice(dayOfMonth - 1);
+        const daysBeforeToday = data.splice(0, dayOfMonth - 1);
+        const sumOfPreviousAllowances = daysBeforeToday
+            .map((item) => {
+                return item.allowance || 0;
+            })
+            .reduce((acc, curr) => (acc as number) + (curr as number));
+        const sumOfFutureAllowances = daysAfterToday
+            .map((item) => {
+                return item.allowance || 0;
+            })
+            .reduce((acc, curr) => (acc as number) + (curr as number));
+        const updatedAllowancesFromToday = daysAfterToday.map((item) => {
+            const allowance =
+                ((sumOfPreviousAllowances as number)+ (sumOfFutureAllowances as number)) /
+                daysAfterToday.length;
+            return { ...item, allowance };
+        });
+        const newBreakdown = [...daysBeforeToday, ...updatedAllowancesFromToday];
+        console.log('sumOfPreviousAllowances', sumOfPreviousAllowances);
+        console.log('sumOfFutureAllowances', sumOfFutureAllowances)
+        console.log('breakdown', newBreakdown)
+        SaveAllowances(newBreakdown);
+    }
+
+    return {dailyAllowances, SaveAllowances, RecalculateAllowances, DeductFromAllowance} as const;
+}
+
+export default useAllowances;

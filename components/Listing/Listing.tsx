@@ -1,5 +1,5 @@
 import * as WebBrowser from "expo-web-browser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -23,6 +23,7 @@ import {
 import ListingItem from "./ListingItem";
 import useDays from "../../hooks/useDays";
 import ListingModalContent from "./ListingModalContent";
+import useAllowances from "../../hooks/useAllowance";
 
 export type DayAllowance = {
   id: number;
@@ -45,13 +46,14 @@ const Listing = ({ navigation }: { navigation: any }) => {
         additions: [],
       };
     }
-  );
-console.debug(allowanceDays)
-  // const Item = ({ item, onPress }:{item:any, onPress:()=> void}) => (
-  //   <TouchableOpacity onPress={onPress}>
-  //     <ListingItem data={item} />
-  //   </TouchableOpacity>
-  // );
+    );
+    const {dailyAllowances, RecalculateAllowances} = useAllowances(allowanceDays);
+    
+    useEffect(() => {
+      console.debug('recalc')
+      RecalculateAllowances(allowanceDays);
+    }, [])
+    
 
   const renderItem = ({ item }: { item: any }) => {
     return (
@@ -81,7 +83,6 @@ console.debug(allowanceDays)
             closeModalHandler={() => setModalVisible(!modalVisible)}
           />
         )}
-        {/* {selectedId && <Text>is a modal  {allowanceDays[selectedId!].allowance}</Text>} */}
       </Modal>
 
       <Text
@@ -94,7 +95,7 @@ console.debug(allowanceDays)
       </Text>
       <FlatList
         style={styles.scrollElem}
-        data={allowanceDays}
+        data={dailyAllowances}
         keyExtractor={(item) => `${item.id}`}
         renderItem={renderItem}
         extraData={selectedId}
