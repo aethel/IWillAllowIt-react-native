@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { DayAllowance } from "./Listing";
 import useAllowances from "../../hooks/useAllowance";
+import { DailyAllowancesContainer } from "../../containers/DailyAllowancesContainer";
 
 const ListingModalContent = ({
   allowanceObj,
@@ -10,13 +11,21 @@ const ListingModalContent = ({
   allowanceObj: DayAllowance;
   closeModalHandler: () => void;
 }) => {
-  const {DeductFromAllowance} = useAllowances();
 
+  const { dailyAllowances, SaveAllowances } = DailyAllowancesContainer.useContainer();
+  const [,DeductFromAllowance] = useAllowances();
+
+  const deductionHandler = () => {
+    const result = DeductFromAllowance(dailyAllowances,20, 7);
+    SaveAllowances(result)
+}
+
+console.debug(dailyAllowances, 'in deduct')
   return (
     <View style={styles.modalView}>
       <Text>Your allowance for {allowanceObj.id}</Text>
       <Text>{parseFloat(allowanceObj.allowance as string).toFixed(2)}</Text>
-      <Button title="deduct" onPress={() => DeductFromAllowance(20, 7)} />
+      <Button title="deduct" onPress={deductionHandler} />
       <Button title="Hide Modal" onPress={closeModalHandler} />
     </View>
   );

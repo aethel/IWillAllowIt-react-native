@@ -199,30 +199,26 @@ export type useAllowancesType = {
     DeductFromAllowance: (arg1:number, arg2:number) => void;
 }
 
-const useAllowances = (initialState:DayAllowance[]) => {
+const useAllowances = () => {
 
-    const [dailyAllowances, setDailyAllowances] = useState<DayAllowance[]>(initialState);
 
-    const DeductFromAllowance = (itemIndex:number, deduction:number) => {
-        const oldAllowanceObj = dailyAllowances[itemIndex];
-        const allowance = oldAllowanceObj.allowance as number - deduction; 
-        const deductions = [...oldAllowanceObj.deductions, deduction]
+    const DeductFromAllowance = (array:any[], itemIndex:number, deduction:number) => {
+        const oldAllowanceObj = array?.find(item => item.id === itemIndex);
+        const allowance = oldAllowanceObj && oldAllowanceObj.allowance as number - deduction; 
+        const deductions = oldAllowanceObj && [...oldAllowanceObj.deductions, deduction]
         const newAllowanceObj = oldAllowanceObj && {...oldAllowanceObj, allowance, deductions}
-        const newAllowances = dailyAllowances.map((item:any,index:number) => {
+        const newAllowances = array!.map((item:any,index:number) => {
             if(itemIndex === index) {
                 return newAllowanceObj;
             }
             return item;
         })
         console.debug(newAllowances);
-        setDailyAllowances(newAllowances)
+        return newAllowances;
     }
-    
-    const SaveAllowances = (data:DayAllowance[]) => {
-        setDailyAllowances(data);
-    }
+   
 
-    const RecalculateAllowances = (data: DayAllowance[]): void => {
+    const RecalculateAllowances = (data: DayAllowance[]):DayAllowance[] => {
         // const dayInMonthPlusOne = new Date(new Date.getTime() + 86400000).getDate();
         // -1 to get dates before and excluding today
         // -1 to get dates before and excluding today
@@ -248,10 +244,10 @@ const useAllowances = (initialState:DayAllowance[]) => {
         console.log('sumOfPreviousAllowances', sumOfPreviousAllowances);
         console.log('sumOfFutureAllowances', sumOfFutureAllowances)
         console.log('breakdown', newBreakdown)
-        SaveAllowances(newBreakdown);
+        return newBreakdown;
     }
 
-    return {dailyAllowances, SaveAllowances, RecalculateAllowances, DeductFromAllowance} as const;
+    return [RecalculateAllowances, DeductFromAllowance] as const;
 }
 
 export default useAllowances;

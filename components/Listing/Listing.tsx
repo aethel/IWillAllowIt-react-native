@@ -24,6 +24,7 @@ import ListingItem from "./ListingItem";
 import useDays from "../../hooks/useDays";
 import ListingModalContent from "./ListingModalContent";
 import useAllowances from "../../hooks/useAllowance";
+import { DailyAllowancesContainer } from "../../containers/DailyAllowancesContainer";
 
 export type DayAllowance = {
   id: number;
@@ -34,9 +35,12 @@ export type DayAllowance = {
 
 const Listing = ({ navigation }: { navigation: any }) => {
   const { totalAmount } = TotalAmountContainer.useContainer();
+  const { dailyAllowances, SaveAllowances } = DailyAllowancesContainer.useContainer();
   const [dayOfMonth, dayOfMonthPlusOne, NumberOfDaysInMonth] = useDays();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [RecalculateAllowances] = useAllowances();
+  
   const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
     (val: any, index: number): DayAllowance => {
       return {
@@ -47,11 +51,10 @@ const Listing = ({ navigation }: { navigation: any }) => {
       };
     }
     );
-    const {dailyAllowances, RecalculateAllowances} = useAllowances(allowanceDays);
     
     useEffect(() => {
-      console.debug('recalc')
-      RecalculateAllowances(allowanceDays);
+      const updatedData = RecalculateAllowances(allowanceDays);
+      SaveAllowances(updatedData);
     }, [])
     
 
