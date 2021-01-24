@@ -203,7 +203,7 @@ const useAllowances = () => {
 
 
     const DeductFromAllowance = (array:any[], itemIndex:number, deduction:number) => {
-        const oldAllowanceObj = array?.find(item => item.id === itemIndex);
+        const oldAllowanceObj = array?.find((item,index) => index === itemIndex);
         const allowance = oldAllowanceObj && oldAllowanceObj.allowance as number - deduction; 
         const deductions = oldAllowanceObj && [...oldAllowanceObj.deductions, deduction]
         const newAllowanceObj = oldAllowanceObj && {...oldAllowanceObj, allowance, deductions}
@@ -213,7 +213,6 @@ const useAllowances = () => {
             }
             return item;
         })
-        console.debug(newAllowances);
         return newAllowances;
     }
    

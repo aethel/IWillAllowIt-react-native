@@ -37,9 +37,9 @@ const Listing = ({ navigation }: { navigation: any }) => {
   const { totalAmount } = TotalAmountContainer.useContainer();
   const { dailyAllowances, SaveAllowances } = DailyAllowancesContainer.useContainer();
   const [dayOfMonth, dayOfMonthPlusOne, NumberOfDaysInMonth] = useDays();
-  const [modalVisible, setModalVisible] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [RecalculateAllowances] = useAllowances();
+  const [RecalculateAllowances, DeductFromAllowance] = useAllowances();
   
   const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
     (val: any, index: number): DayAllowance => {
@@ -56,38 +56,26 @@ const Listing = ({ navigation }: { navigation: any }) => {
       const updatedData = RecalculateAllowances(allowanceDays);
       SaveAllowances(updatedData);
     }, [])
-    
 
-  const renderItem = ({ item }: { item: any }) => {
+    const deductionHandler = (index:any) => {
+      const blah = DeductFromAllowance(dailyAllowances, index, 4);
+      SaveAllowances(blah)
+  }
+
+  const renderItem = ({ item, index }: { item: any, index:any }) => {
     return (
       <ListingItem
         item={item}
         onPress={async () => {
-          await setSelectedId(item.id);
-          setModalVisible(!modalVisible);
+          deductionHandler(index)
         }}
       />
     );
   };
 
+
   return (
     <SafeAreaView style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
-      >
-        {selectedId && (
-          <ListingModalContent
-            allowanceObj={allowanceDays[selectedId!]}
-            closeModalHandler={() => setModalVisible(!modalVisible)}
-          />
-        )}
-      </Modal>
-
       <Text
         style={styles.getStartedText}
         lightColor="rgba(0,0,0,0.8)"
@@ -99,9 +87,8 @@ const Listing = ({ navigation }: { navigation: any }) => {
       <FlatList
         style={styles.scrollElem}
         data={dailyAllowances}
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={(item,index) => `${index}`}
         renderItem={renderItem}
-        extraData={selectedId}
       />
       <Button
         title="Back"

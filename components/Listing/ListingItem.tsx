@@ -3,8 +3,15 @@ import { View, Text, Button, TouchableOpacity } from "react-native";
 import { DayAllowance } from "./Listing";
 
 const ListingItem = ({item, onPress}:{item:DayAllowance, onPress: () => void}) => {
+    // const deductionHandler = () => {
+    //     // const result = DeductFromAllowance(dailyAllowances,20, 7);
+    //     // SaveAllowances(result)
+    //     const allowance = item.allowance as number - 4;
+    //     const deductions = [...item.deductions, 4];
+    //     return ({...item, allowance, deductions})
+    // }
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity>
         <View>
             <Text>
                 Date: {item.id}
@@ -18,6 +25,7 @@ const ListingItem = ({item, onPress}:{item:DayAllowance, onPress: () => void}) =
             {!!item.additions.length && <Text>
                 deductions: {item.additions}
             </Text>}
+            <Button title={'deduct'} onPress={onPress}/>
         </View>
     </TouchableOpacity>
 
