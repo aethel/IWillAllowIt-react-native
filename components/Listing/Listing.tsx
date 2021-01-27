@@ -25,6 +25,7 @@ import useDays from "../../hooks/useDays";
 import ListingModalContent from "./ListingModalContent";
 import useAllowances from "../../hooks/useAllowance";
 import { DailyAllowancesContainer } from "../../containers/DailyAllowancesContainer";
+import { useNavigation } from "@react-navigation/native";
 
 export type DayAllowance = {
   id: number;
@@ -33,14 +34,15 @@ export type DayAllowance = {
   additions: any[];
 };
 
-const Listing = ({ navigation }: { navigation: any }) => {
+const Listing = () => {
   const { totalAmount } = TotalAmountContainer.useContainer();
   const { dailyAllowances, SaveAllowances } = DailyAllowancesContainer.useContainer();
   const [dayOfMonth, dayOfMonthPlusOne, NumberOfDaysInMonth] = useDays();
   // const [modalVisible, setModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [RecalculateAllowances, DeductFromAllowance] = useAllowances();
-  
+  const navigation = useNavigation();
+  console.debug(navigation)
   const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
     (val: any, index: number): DayAllowance => {
       return {
@@ -55,7 +57,7 @@ const Listing = ({ navigation }: { navigation: any }) => {
     useEffect(() => {
       const updatedData = RecalculateAllowances(allowanceDays);
       SaveAllowances(updatedData);
-    }, [])
+    }, [totalAmount])
 
     const deductionHandler = (index:any) => {
       const blah = DeductFromAllowance(dailyAllowances, index, 4);
@@ -89,6 +91,7 @@ const Listing = ({ navigation }: { navigation: any }) => {
         data={dailyAllowances}
         keyExtractor={(item,index) => `${index}`}
         renderItem={renderItem}
+        extraData={totalAmount}
       />
       <Button
         title="Back"
