@@ -6,11 +6,12 @@ import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { TotalAmountContainer } from '../containers/TotalAmountContainer';
+import { useNavigation } from '@react-navigation/native';
 
-const EditScreenInfo = ({navigation}:{navigation:any}) => {
+const EditScreenInfo = () => {
   const [value, onChangeValue] = useState<string>('0');
   const totalAmount = TotalAmountContainer.useContainer();
-
+  const navigation = useNavigation();
   return (
     <View>      
         <Text

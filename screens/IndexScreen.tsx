@@ -9,7 +9,7 @@ export default function IndexScreen({navigation}:{navigation:any}) {
     <View style={styles.container}>
       <Text style={styles.title}>Start tracking your expenses</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo navigation={navigation} />
+      <EditScreenInfo />
     </View>
   );
 }

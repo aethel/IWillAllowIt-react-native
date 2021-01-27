@@ -10,7 +10,7 @@ export default function ListingScreen({navigation}:{navigation:any}) {
     <View style={styles.container}>
       <Text style={styles.title}>Here's your monthly breakdown</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Listing navigation={navigation}/>
+      <Listing/>
     </View>
   );
 }

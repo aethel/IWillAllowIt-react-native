@@ -42,7 +42,6 @@ const Listing = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [RecalculateAllowances, DeductFromAllowance] = useAllowances();
   const navigation = useNavigation();
-  console.debug(navigation)
   const allowanceDays = [...new Array(NumberOfDaysInMonth())].map(
     (val: any, index: number): DayAllowance => {
       return {
@@ -96,7 +95,7 @@ const Listing = () => {
       <Button
         title="Back"
         color="#f194ff"
-        onPress={() => navigation.goBack(null)}
+        onPress={() => navigation.goBack()}
       />
     </SafeAreaView>
   );
