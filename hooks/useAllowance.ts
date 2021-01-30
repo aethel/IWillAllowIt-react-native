@@ -240,9 +240,6 @@ const useAllowances = () => {
             return { ...item, allowance };
         });
         const newBreakdown = [...daysBeforeToday, ...updatedAllowancesFromToday];
-        console.log('sumOfPreviousAllowances', sumOfPreviousAllowances);
-        console.log('sumOfFutureAllowances', sumOfFutureAllowances)
-        console.log('breakdown', newBreakdown)
         return newBreakdown;
     }
 

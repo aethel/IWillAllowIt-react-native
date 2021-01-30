@@ -58,8 +58,8 @@ const Listing = () => {
       SaveAllowances(updatedData);
     }, [totalAmount])
 
-    const deductionHandler = (index:any) => {
-      const blah = DeductFromAllowance(dailyAllowances, index, 4);
+    const deductionHandler = (value:any, index:any) => {
+      const blah = DeductFromAllowance(dailyAllowances, index, value);
       SaveAllowances(blah)
   }
 
@@ -67,9 +67,8 @@ const Listing = () => {
     return (
       <ListingItem
         item={item}
-        onPress={async () => {
-          deductionHandler(index)
-        }}
+        index={index}
+        onPressHandler={deductionHandler}
       />
     );
   };

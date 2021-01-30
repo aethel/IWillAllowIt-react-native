@@ -1,15 +1,14 @@
 import React from "react";
 import { View, Text, Button, TouchableOpacity } from "react-native";
+import NotFoundScreen from "../../screens/NotFoundScreen";
 import { DayAllowance } from "./Listing";
 
-const ListingItem = ({item, onPress}:{item:DayAllowance, onPress: () => void}) => {
-    // const deductionHandler = () => {
-    //     // const result = DeductFromAllowance(dailyAllowances,20, 7);
-    //     // SaveAllowances(result)
-    //     const allowance = item.allowance as number - 4;
-    //     const deductions = [...item.deductions, 4];
-    //     return ({...item, allowance, deductions})
-    // }
+const ListingItem = ({item, onPressHandler, index}:{item:DayAllowance, onPressHandler: (val:any, index:any) => void, index:any}) => {
+   
+    const clickHandle = () => {
+        onPressHandler(1, index)
+    }
+   
     return (
         <TouchableOpacity>
         <View>
@@ -25,7 +24,7 @@ const ListingItem = ({item, onPress}:{item:DayAllowance, onPress: () => void}) =
             {!!item.additions.length && <Text>
                 deductions: {item.additions}
             </Text>}
-            <Button title={'deduct'} onPress={onPress}/>
+            <Button title={'deduct'} onPress={clickHandle}/>
         </View>
     </TouchableOpacity>
 
